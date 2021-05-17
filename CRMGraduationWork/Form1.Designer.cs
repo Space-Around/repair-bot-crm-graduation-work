@@ -35,11 +35,6 @@
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.dataGridView3 = new System.Windows.Forms.DataGridView();
-            this.RequestID3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CreateDate2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.AcceptDate2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Date3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CreateDocBtn2 = new System.Windows.Forms.DataGridViewButtonColumn();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
@@ -91,9 +86,11 @@
             this.dataGridView1.MultiSelect = false;
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
+            this.dataGridView1.RowHeadersVisible = false;
             this.dataGridView1.RowTemplate.Height = 28;
             this.dataGridView1.Size = new System.Drawing.Size(692, 428);
             this.dataGridView1.TabIndex = 0;
+            this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
             // tabPage2
             // 
@@ -118,9 +115,11 @@
             this.dataGridView2.Location = new System.Drawing.Point(6, 6);
             this.dataGridView2.Name = "dataGridView2";
             this.dataGridView2.ReadOnly = true;
+            this.dataGridView2.RowHeadersVisible = false;
             this.dataGridView2.RowTemplate.Height = 28;
             this.dataGridView2.Size = new System.Drawing.Size(692, 428);
             this.dataGridView2.TabIndex = 0;
+            this.dataGridView2.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView2_CellContentClick);
             // 
             // tabPage3
             // 
@@ -142,48 +141,13 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridView3.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView3.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView3.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.RequestID3,
-            this.CreateDate2,
-            this.AcceptDate2,
-            this.Date3,
-            this.CreateDocBtn2});
             this.dataGridView3.Location = new System.Drawing.Point(6, 6);
             this.dataGridView3.Name = "dataGridView3";
             this.dataGridView3.ReadOnly = true;
+            this.dataGridView3.RowHeadersVisible = false;
             this.dataGridView3.RowTemplate.Height = 28;
             this.dataGridView3.Size = new System.Drawing.Size(692, 428);
             this.dataGridView3.TabIndex = 0;
-            // 
-            // RequestID3
-            // 
-            this.RequestID3.HeaderText = "Request";
-            this.RequestID3.Name = "RequestID3";
-            this.RequestID3.ReadOnly = true;
-            // 
-            // CreateDate2
-            // 
-            this.CreateDate2.HeaderText = "Create Date";
-            this.CreateDate2.Name = "CreateDate2";
-            this.CreateDate2.ReadOnly = true;
-            // 
-            // AcceptDate2
-            // 
-            this.AcceptDate2.HeaderText = "Accept Date";
-            this.AcceptDate2.Name = "AcceptDate2";
-            this.AcceptDate2.ReadOnly = true;
-            // 
-            // Date3
-            // 
-            this.Date3.HeaderText = "Complet Date";
-            this.Date3.Name = "Date3";
-            this.Date3.ReadOnly = true;
-            // 
-            // CreateDocBtn2
-            // 
-            this.CreateDocBtn2.HeaderText = "Create Doc";
-            this.CreateDocBtn2.Name = "CreateDocBtn2";
-            this.CreateDocBtn2.ReadOnly = true;
             // 
             // statusStrip1
             // 
@@ -246,11 +210,6 @@
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn RequestID3;
-        private System.Windows.Forms.DataGridViewTextBoxColumn CreateDate2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn AcceptDate2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Date3;
-        private System.Windows.Forms.DataGridViewButtonColumn CreateDocBtn2;
     }
 }
 
