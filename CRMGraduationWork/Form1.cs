@@ -64,7 +64,12 @@ namespace CRMGraduationWork
             conn.Close();
             conn.Dispose();
 
-            dataGridView1.Columns.Clear();
+            try
+            {
+                dataGridView1.Columns.Clear();
+            }
+            catch { }
+
             dataGridView1.DataSource = requests;
 
             DataGridViewButtonColumn acceptButton = new DataGridViewButtonColumn();
@@ -126,7 +131,11 @@ namespace CRMGraduationWork
             conn.Close();
             conn.Dispose();
 
-            dataGridView2.Columns.Clear();
+            try
+            {
+                dataGridView2.Columns.Clear();
+            }
+            catch { }
             dataGridView2.DataSource = acceptedRequests;
 
             DataGridViewButtonColumn acceptButton = new DataGridViewButtonColumn();
@@ -190,7 +199,11 @@ namespace CRMGraduationWork
             conn.Close();
             conn.Dispose();
 
-            dataGridView3.Columns.Clear();
+            try
+            {
+                dataGridView3.Columns.Clear();
+            }
+            catch { }
             dataGridView3.DataSource = acceptedRequests;
 
             DataGridViewButtonColumn acceptButton = new DataGridViewButtonColumn();
@@ -201,6 +214,58 @@ namespace CRMGraduationWork
             this.dataGridView3.Columns.Insert(4, acceptButton);
 
             this.dataGridView3.ClearSelection();
+        }
+
+        public void loadRequestsByStatusInDGV4()
+        {
+            List<MastersDGV> masters = new List<MastersDGV>();
+            int id;
+            string name = "";
+            string login = "";
+            string password = "";
+            string connStr = "server=localhost;user=root;database=repair_bot_db;charset=utf8;";
+            MySqlConnection conn = new MySqlConnection(connStr);
+
+            try
+            {
+                conn.Open();
+            }
+            catch
+            {
+                MessageBox.Show("Error", "Unable to connect to the server");
+                return;
+            }
+
+            MySqlCommand command = new MySqlCommand();
+            command.Connection = conn;
+            command.CommandText = "SELECT * FROM masters;";
+
+            using (MySqlDataReader result = command.ExecuteReader())
+            {
+                if (result.HasRows)
+                {
+                    while (result.Read())
+                    {
+                        id = Convert.ToInt32(result[0]);
+                        name = result[1].ToString();
+                        login = result[2].ToString();
+                        password = result[3].ToString();
+                        masters.Add(new MastersDGV { ID = id, Name = name, Login = login, Password = password });
+                    }
+                }
+            }
+
+            conn.Close();
+            conn.Dispose();
+
+            try
+            {
+                dataGridView4.Columns.Clear();
+            }
+            catch { }
+            dataGridView4.DataSource = masters;            
+
+            this.dataGridView4.ClearSelection();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -216,6 +281,7 @@ namespace CRMGraduationWork
             loadRequestsByStatusInDGV1();
             loadRequestsByStatusInDGV2();
             loadRequestsByStatusInDGV3();
+            loadRequestsByStatusInDGV4();
         }  
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -295,7 +361,7 @@ namespace CRMGraduationWork
                     MySqlCommand command = new MySqlCommand();
                     command.Connection = conn;
                     command.CommandText = "SELECT * FROM requests WHERE status = @status";
-                    command.Parameters.AddWithValue("@status", 0);
+                    command.Parameters.AddWithValue("@status", 1);
 
                     using (MySqlDataReader result = command.ExecuteReader())
                     {
@@ -318,6 +384,7 @@ namespace CRMGraduationWork
                     conn.Close();
                     conn.Dispose();
 
+                    
                     string connStr3 = "server=localhost;user=root;database=repair_bot_db;charset=utf8;";
                     MySqlConnection conn3 = new MySqlConnection(connStr3);
 
@@ -349,6 +416,16 @@ namespace CRMGraduationWork
 
                     conn3.Close();
                     conn3.Dispose();
+
+                    Console.WriteLine(ID);
+                    Console.WriteLine(name);
+                    Console.WriteLine(email);
+                    Console.WriteLine(phone);
+                    Console.WriteLine(createDate);
+                    Console.WriteLine(acceptDate);
+                    Console.WriteLine(typeOfEquipment);
+                    Console.WriteLine(issue);
+                    Console.WriteLine(masterName);
 
                     Microsoft.Office.Interop.Word.Application winword = new Microsoft.Office.Interop.Word.Application();
                     winword.ShowAnimation = false;
@@ -442,7 +519,7 @@ namespace CRMGraduationWork
                     MySqlCommand command = new MySqlCommand();
                     command.Connection = conn;
                     command.CommandText = "SELECT * FROM requests WHERE status = @status";
-                    command.Parameters.AddWithValue("@status", 0);
+                    command.Parameters.AddWithValue("@status", 2);
 
                     using (MySqlDataReader result = command.ExecuteReader())
                     {
