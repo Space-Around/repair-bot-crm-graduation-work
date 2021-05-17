@@ -24,9 +24,23 @@ namespace CRMGraduationWork
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Console.WriteLine(comboBox1.Text);
-            /*
-            string acceptDate = DateTime.UtcNow.Date.ToString("yyyy-MM-dd HH:mm:ss");
+            string name = "";
+            string email = "";
+            string phone = "";
+            string createDate = "";
+            string typeOfEquipment = "";
+            string issue = "";
+            string masterName = "";
+            int masterID = -1;
+
+            name = textBox1.Text;
+            email = textBox2.Text;
+            phone = textBox3.Text;
+            createDate = textBox4.Text;
+            typeOfEquipment = textBox5.Text;
+            issue = richTextBox1.Text;
+            masterName = comboBox1.Text;
+
             string connStr = "server=localhost;user=root;database=repair_bot_db;charset=utf8;";
             MySqlConnection conn = new MySqlConnection(connStr);
 
@@ -42,19 +56,62 @@ namespace CRMGraduationWork
 
             MySqlCommand command = new MySqlCommand();
             command.Connection = conn;
-            command.CommandText = "UPDATE requests SET status = @status, accept_date = @accept_date WHERE id = @id";
-            command.Parameters.AddWithValue("@status", 1);
-            command.Parameters.AddWithValue("@accpet_date", acceptDate);
-            command.Parameters.AddWithValue("@id", this.requestID);
-            command.ExecuteNonQuery();
+            command.CommandText = "SELECT * FROM masters WHERE name = @name";
+            command.Parameters.AddWithValue("@name", masterName);
+
+            using (MySqlDataReader result = command.ExecuteReader())
+            {
+                if (result.HasRows)
+                {
+                    while (result.Read())
+                    {
+                        masterID = Convert.ToInt32(result[0]);
+                    }
+
+                }
+            }
 
             conn.Close();
-            conn.Dispose();*/
+            conn.Dispose();
+
+
+            string acceptDate = DateTime.UtcNow.Date.ToString("yyyy-MM-dd HH:mm:ss");
+            string connStr2 = "server=localhost;user=root;database=repair_bot_db;charset=utf8;";
+            MySqlConnection conn2 = new MySqlConnection(connStr2);
+
+            try
+            {
+                conn2.Open();
+            }
+            catch
+            {
+                MessageBox.Show("Error", "Unable to connect to the server");
+                return;
+            }
+
+            MySqlCommand command2 = new MySqlCommand();
+            command2.Connection = conn2;
+            command2.CommandText = "UPDATE requests SET status = @status, accept_date = @accept_date, name = @name, email = @email, phone = @phone, create_date = @create_date, type_of_equipment = @type_of_equipment, issue = @issue, master_id = @master_id WHERE id = @id";
+            command2.Parameters.AddWithValue("@status", 1);
+            command2.Parameters.AddWithValue("@name", name);
+            command2.Parameters.AddWithValue("@email", email);
+            command2.Parameters.AddWithValue("@phone", phone);
+            command2.Parameters.AddWithValue("@create_date", createDate);
+            command2.Parameters.AddWithValue("@type_of_equipment", typeOfEquipment);
+            command2.Parameters.AddWithValue("@issue", issue);
+            command2.Parameters.AddWithValue("@accept_date", acceptDate);
+            command2.Parameters.AddWithValue("@master_id", masterID);
+            command2.Parameters.AddWithValue("@id", this.requestID);
+            command2.ExecuteNonQuery();
+
+            conn2.Close();
+            conn2.Dispose();
+
+            this.Close();
         }
 
         private void Form2_Load(object sender, EventArgs e)
         {
-            Console.WriteLine(requestID);
             string name = "";
             string email = "";
             string phone = "";
