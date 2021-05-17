@@ -226,30 +226,9 @@ namespace CRMGraduationWork
             {
                 // click accept
                 case 2:
-                    string acceptDate = DateTime.UtcNow.Date.ToString("yyyy-MM-dd HH:mm:ss");
-                    string connStr = "server=localhost;user=root;database=repair_bot_db;charset=utf8;";
-                    MySqlConnection conn = new MySqlConnection(connStr);
-
-                    try
-                    {
-                        conn.Open();
-                    }
-                    catch
-                    {
-                        MessageBox.Show("Error", "Unable to connect to the server");
-                        return;
-                    }
-
-                    MySqlCommand command = new MySqlCommand();
-                    command.Connection = conn;
-                    command.CommandText = "UPDATE requests SET status = @status, accept_date = @accept_date WHERE id = @id";
-                    command.Parameters.AddWithValue("@status", 1);
-                    command.Parameters.AddWithValue("@accpet_date", acceptDate);
-                    command.Parameters.AddWithValue("@id", ID);
-                    command.ExecuteNonQuery();
-
-                    conn.Close();
-                    conn.Dispose();
+                    Form2 form = new Form2(ID);
+                    form.Show();
+                                        
                     break;
 
                 // click reject
@@ -357,19 +336,19 @@ namespace CRMGraduationWork
                     command3.CommandText = "SELECT * FROM masters WHERE id = @id";
                     command3.Parameters.AddWithValue("@id", masterID);
 
-                    using (MySqlDataReader result = command3.ExecuteReader())
+                    using (MySqlDataReader result3 = command3.ExecuteReader())
                     {
-                        if (result.HasRows)
+                        if (result3.HasRows)
                         {
-                            while (result.Read())
+                            while (result3.Read())
                             {
-                                masterName = result[1].ToString();
+                                masterName = result3[1].ToString();
                             }
                         }
                     }
 
-                    conn.Close();
-                    conn.Dispose();
+                    conn3.Close();
+                    conn3.Dispose();
 
                     Microsoft.Office.Interop.Word.Application winword = new Microsoft.Office.Interop.Word.Application();
                     winword.ShowAnimation = false;
@@ -423,6 +402,127 @@ namespace CRMGraduationWork
 
                     conn2.Close();
                     conn2.Dispose();
+                    break;
+            }
+        }
+
+        private void dataGridView3_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            int ID = Convert.ToInt32(dataGridView2.Rows[e.RowIndex].Cells[0].Value);
+
+            switch (e.ColumnIndex)
+            {
+                // click create doc
+                case 4:
+                    string name = "";
+                    string email = "";
+                    string phone = "";
+                    string createDate = "";
+                    string acceptDate = "";
+                    string completeDate = "";
+                    string typeOfEquipment = "";
+                    string issue = "";
+                    int masterID = -1;
+                    string masterName = "";
+
+
+                    string connStr = "server=localhost;user=root;database=repair_bot_db;charset=utf8;";
+                    MySqlConnection conn = new MySqlConnection(connStr);
+
+                    try
+                    {
+                        conn.Open();
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Error", "Unable to connect to the server");
+                        return;
+                    }
+
+                    MySqlCommand command = new MySqlCommand();
+                    command.Connection = conn;
+                    command.CommandText = "SELECT * FROM requests WHERE status = @status";
+                    command.Parameters.AddWithValue("@status", 0);
+
+                    using (MySqlDataReader result = command.ExecuteReader())
+                    {
+                        if (result.HasRows)
+                        {
+                            while (result.Read())
+                            {
+                                name = result[1].ToString();
+                                email = result[2].ToString();
+                                phone = result[3].ToString();
+                                createDate = result[4].ToString();
+                                acceptDate = result[5].ToString();
+                                completeDate = result[6].ToString();
+                                typeOfEquipment = result[7].ToString();
+                                issue = result[8].ToString();
+                                masterID = Convert.ToInt32(result[9]);
+                            }
+                        }
+                    }
+
+                    conn.Close();
+                    conn.Dispose();
+
+                    string connStr3 = "server=localhost;user=root;database=repair_bot_db;charset=utf8;";
+                    MySqlConnection conn3 = new MySqlConnection(connStr3);
+
+                    try
+                    {
+                        conn3.Open();
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Error", "Unable to connect to the server");
+                        return;
+                    }
+
+                    MySqlCommand command3 = new MySqlCommand();
+                    command3.Connection = conn3;
+                    command3.CommandText = "SELECT * FROM masters WHERE id = @id";
+                    command3.Parameters.AddWithValue("@id", masterID);
+
+                    using (MySqlDataReader result3 = command3.ExecuteReader())
+                    {
+                        if (result3.HasRows)
+                        {
+                            while (result3.Read())
+                            {
+                                masterName = result3[1].ToString();
+                            }
+                        }
+                    }
+
+                    conn3.Close();
+                    conn3.Dispose();
+
+                    Microsoft.Office.Interop.Word.Application winword = new Microsoft.Office.Interop.Word.Application();
+                    winword.ShowAnimation = false;
+                    winword.Visible = false;
+                    object missing = System.Reflection.Missing.Value;
+                    Microsoft.Office.Interop.Word.Document document = winword.Documents.Add(ref missing, ref missing, ref missing, ref missing);
+
+                    document.Content.SetRange(0, 0);
+                    document.Content.Text = "Акт о завершении работ" + Environment.NewLine +
+                                            "Номер заказа: " + ID.ToString() + Environment.NewLine +
+                                            "ФИО: " + name + Environment.NewLine +
+                                            "Email: " + email + Environment.NewLine +
+                                            "Номер тел.: " + phone + Environment.NewLine +
+                                            "Дата создания: " + createDate + Environment.NewLine +
+                                            "Дата принятия: " + acceptDate + Environment.NewLine +
+                                            "Дата завершения: " + completeDate + Environment.NewLine +
+                                            "Тип: " + typeOfEquipment + Environment.NewLine +
+                                            "Проблема: " + issue + Environment.NewLine +
+                                            "ФИО мастера: " + masterName + Environment.NewLine;
+
+                    object filename = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Act_o_zavershenii_rabot_" + ID.ToString() + ".docx";
+                    document.SaveAs2(ref filename);
+                    document.Close(ref missing, ref missing, ref missing);
+                    document = null;
+                    winword.Quit(ref missing, ref missing, ref missing);
+                    winword = null;
                     break;
             }
         }

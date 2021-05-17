@@ -59,14 +59,14 @@
             // 
             this.textBox1.Location = new System.Drawing.Point(200, 35);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(201, 26);
+            this.textBox1.Size = new System.Drawing.Size(280, 26);
             this.textBox1.TabIndex = 1;
             // 
             // textBox2
             // 
             this.textBox2.Location = new System.Drawing.Point(200, 67);
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(201, 26);
+            this.textBox2.Size = new System.Drawing.Size(280, 26);
             this.textBox2.TabIndex = 3;
             // 
             // label2
@@ -82,7 +82,7 @@
             // 
             this.textBox3.Location = new System.Drawing.Point(200, 99);
             this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(201, 26);
+            this.textBox3.Size = new System.Drawing.Size(280, 26);
             this.textBox3.TabIndex = 5;
             // 
             // label3
@@ -98,7 +98,7 @@
             // 
             this.textBox4.Location = new System.Drawing.Point(200, 131);
             this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(201, 26);
+            this.textBox4.Size = new System.Drawing.Size(280, 26);
             this.textBox4.TabIndex = 7;
             // 
             // label4
@@ -114,7 +114,7 @@
             // 
             this.textBox5.Location = new System.Drawing.Point(200, 163);
             this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(201, 26);
+            this.textBox5.Size = new System.Drawing.Size(280, 26);
             this.textBox5.TabIndex = 9;
             // 
             // label5
@@ -148,7 +148,7 @@
             // 
             this.richTextBox1.Location = new System.Drawing.Point(200, 195);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(201, 73);
+            this.richTextBox1.Size = new System.Drawing.Size(280, 73);
             this.richTextBox1.TabIndex = 14;
             this.richTextBox1.Text = "";
             // 
@@ -157,7 +157,7 @@
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Location = new System.Drawing.Point(200, 275);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(201, 28);
+            this.comboBox1.Size = new System.Drawing.Size(280, 28);
             this.comboBox1.TabIndex = 15;
             // 
             // button1
@@ -168,12 +168,13 @@
             this.button1.TabIndex = 16;
             this.button1.Text = "Accept";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(437, 448);
+            this.ClientSize = new System.Drawing.Size(492, 448);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.richTextBox1);
@@ -192,6 +193,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form2";
             this.Text = "Request Detail | Repair Bot";
+            this.Load += new System.EventHandler(this.Form2_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
