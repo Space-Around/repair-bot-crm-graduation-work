@@ -21,3 +21,4 @@ C:\Users\Kulic\Desktop\projects\CRMGraduationWork\CRMGraduationWork\bin\Debug\Sy
 C:\Users\Kulic\Desktop\projects\CRMGraduationWork\CRMGraduationWork\bin\Debug\MySql.Data.xml
 C:\Users\Kulic\Desktop\projects\CRMGraduationWork\CRMGraduationWork\obj\Debug\CRMGraduationWork.csproj.CRMGraduationWork.exe.config
 C:\Users\Kulic\Desktop\projects\CRMGraduationWork\CRMGraduationWork\obj\Debug\CRMGraduationWork.Form1.resources
+C:\Users\Kulic\Desktop\projects\CRMGraduationWork\CRMGraduationWork\obj\Debug\CRMGraduationWork.Form3.resources

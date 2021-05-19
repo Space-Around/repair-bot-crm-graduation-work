@@ -54,6 +54,7 @@ namespace CRMGraduationWork
                     while (result.Read())
                     {
                         id = Convert.ToInt32(result[0]);
+                        Console.WriteLine("Date:" + result[4].ToString());
                         createDate = DateTime.ParseExact(result[4].ToString(), "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
                         requests.Add(new RequestDGV { ID = id, CreateDate = createDate });
 
@@ -212,6 +213,13 @@ namespace CRMGraduationWork
             acceptButton.Text = "Create Doc";
             acceptButton.UseColumnTextForButtonValue = true;
             this.dataGridView3.Columns.Insert(4, acceptButton);
+
+            DataGridViewButtonColumn AddButton = new DataGridViewButtonColumn();
+            AddButton.Name = "Add";
+            AddButton.HeaderText = "Add";
+            AddButton.Text = "Add";
+            AddButton.UseColumnTextForButtonValue = true;
+            this.dataGridView3.Columns.Insert(5, AddButton);
 
             this.dataGridView3.ClearSelection();
         }
@@ -485,7 +493,7 @@ namespace CRMGraduationWork
 
         private void dataGridView3_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            int ID = Convert.ToInt32(dataGridView2.Rows[e.RowIndex].Cells[0].Value);
+            int ID = Convert.ToInt32(dataGridView3.Rows[e.RowIndex].Cells[0].Value);
 
             switch (e.ColumnIndex)
             {
@@ -498,6 +506,8 @@ namespace CRMGraduationWork
                     string acceptDate = "";
                     string completeDate = "";
                     string typeOfEquipment = "";
+                    string price = "";
+                    string refinements = "";
                     string issue = "";
                     int masterID = -1;
                     string masterName = "";
@@ -518,8 +528,8 @@ namespace CRMGraduationWork
 
                     MySqlCommand command = new MySqlCommand();
                     command.Connection = conn;
-                    command.CommandText = "SELECT * FROM requests WHERE status = @status";
-                    command.Parameters.AddWithValue("@status", 2);
+                    command.CommandText = "SELECT * FROM requests WHERE id = @id";
+                    command.Parameters.AddWithValue("@id", ID);
 
                     using (MySqlDataReader result = command.ExecuteReader())
                     {
@@ -536,6 +546,8 @@ namespace CRMGraduationWork
                                 typeOfEquipment = result[7].ToString();
                                 issue = result[8].ToString();
                                 masterID = Convert.ToInt32(result[9]);
+                                price = result[12].ToString();
+                                refinements = result[13].ToString();
                             }
                         }
                     }
@@ -592,7 +604,14 @@ namespace CRMGraduationWork
                                             "Дата завершения: " + completeDate + Environment.NewLine +
                                             "Тип: " + typeOfEquipment + Environment.NewLine +
                                             "Проблема: " + issue + Environment.NewLine +
-                                            "ФИО мастера: " + masterName + Environment.NewLine;
+                                            "ФИО мастера: " + masterName + Environment.NewLine +
+                                            "Что сделано: " + refinements + Environment.NewLine +
+                                            "Цена: " + price + Environment.NewLine;
+
+                    if (System.IO.File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Act_o_zavershenii_rabot_" + ID.ToString() + ".docx"))
+                    {
+                        System.IO.File.Delete(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Act_o_zavershenii_rabot_" + ID.ToString() + ".docx");
+                    }
 
                     object filename = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Act_o_zavershenii_rabot_" + ID.ToString() + ".docx";
                     document.SaveAs2(ref filename);
@@ -600,6 +619,12 @@ namespace CRMGraduationWork
                     document = null;
                     winword.Quit(ref missing, ref missing, ref missing);
                     winword = null;
+                    break;
+
+                case 5:
+                    Form3 form3 = new Form3(ID);
+                    form3.Show();
+
                     break;
             }
         }
