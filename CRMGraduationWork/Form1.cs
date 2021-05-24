@@ -54,8 +54,8 @@ namespace CRMGraduationWork
                     while (result.Read())
                     {
                         id = Convert.ToInt32(result[0]);
-                        Console.WriteLine("Date:" + result[4].ToString());
-                        createDate = DateTime.ParseExact(result[4].ToString(), "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+                        Console.WriteLine("Date:" + result[1].ToString());
+                        createDate = DateTime.ParseExact(result[1].ToString(), "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
                         requests.Add(new RequestDGV { ID = id, CreateDate = createDate });
 
                     }
@@ -122,8 +122,8 @@ namespace CRMGraduationWork
                     while (result.Read())
                     {
                         id = Convert.ToInt32(result[0]);
-                        createDate = DateTime.ParseExact(result[4].ToString(), "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
-                        acceptDate = DateTime.ParseExact(result[5].ToString(), "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+                        createDate = DateTime.ParseExact(result[1].ToString(), "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+                        acceptDate = DateTime.ParseExact(result[2].ToString(), "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
                         acceptedRequests.Add(new AcceptedRequestDGB { ID = id, CreateDate = createDate, AcceptDate = acceptDate });
                     }
                 }
@@ -189,9 +189,9 @@ namespace CRMGraduationWork
                     while (result.Read())
                     {
                         id = Convert.ToInt32(result[0]);
-                        createDate = DateTime.ParseExact(result[4].ToString(), "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
-                        acceptDate = DateTime.ParseExact(result[5].ToString(), "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
-                        completeDate = DateTime.ParseExact(result[6].ToString(), "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+                        createDate = DateTime.ParseExact(result[1].ToString(), "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+                        acceptDate = DateTime.ParseExact(result[2].ToString(), "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+                        completeDate = DateTime.ParseExact(result[3].ToString(), "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
                         acceptedRequests.Add(new CompletedRequestDGV { ID = id, CreateDate = createDate, AcceptDate = acceptDate, CompleteDate = completeDate });
                     }
                 }
@@ -342,13 +342,17 @@ namespace CRMGraduationWork
                 // click create doc
                 case 3:
 
-                    string name = "";
-                    string email = "";
-                    string phone = "";
+                    int clientID = 0;
+                    string clientName = "";
+                    string clientEmail = "";
+                    string clientPhone = "";
+                    string clientAddress = "";
                     string createDate = "";
                     string acceptDate = "";
-                    string typeOfEquipment = "";
-                    string issue = "";
+                    int techID = 0;
+                    string techName = "";
+                    int issueID = 0;
+                    string issueDescription = "";
                     int masterID = -1;
                     string masterName = "";
 
@@ -368,8 +372,8 @@ namespace CRMGraduationWork
 
                     MySqlCommand command = new MySqlCommand();
                     command.Connection = conn;
-                    command.CommandText = "SELECT * FROM requests WHERE status = @status";
-                    command.Parameters.AddWithValue("@status", 1);
+                    command.CommandText = "SELECT * FROM requests WHERE id = @id";
+                    command.Parameters.AddWithValue("@id", ID);
 
                     using (MySqlDataReader result = command.ExecuteReader())
                     {
@@ -377,14 +381,12 @@ namespace CRMGraduationWork
                         {
                             while (result.Read())
                             {
-                                name = result[1].ToString();
-                                email = result[2].ToString();
-                                phone = result[3].ToString();
-                                createDate = result[4].ToString();
-                                acceptDate = result[5].ToString();
-                                typeOfEquipment = result[7].ToString();
-                                issue = result[8].ToString();
-                                masterID = Convert.ToInt32(result[9]);
+                                createDate = result[1].ToString();
+                                acceptDate = result[2].ToString();
+                                masterID = Convert.ToInt32(result[4]);
+                                techID = Convert.ToInt32(result[6]);
+                                issueID = Convert.ToInt32(result[7]);
+                                clientID = Convert.ToInt32(result[8]);
                             }
                         }
                     }
@@ -392,7 +394,74 @@ namespace CRMGraduationWork
                     conn.Close();
                     conn.Dispose();
 
-                    
+                    string connStr4 = "server=localhost;user=root;database=repair_bot_db;charset=utf8;";
+                    MySqlConnection conn4 = new MySqlConnection(connStr4);
+
+                    try
+                    {
+                        conn4.Open();
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Error", "Unable to connect to the server");
+                        return;
+                    }
+
+                    MySqlCommand command4 = new MySqlCommand();
+                    command4.Connection = conn4;
+                    command4.CommandText = "SELECT * FROM clients WHERE id = @id";
+                    command4.Parameters.AddWithValue("@id", clientID);
+
+                    using (MySqlDataReader result4 = command4.ExecuteReader())
+                    {
+                        if (result4.HasRows)
+                        {
+                            while (result4.Read())
+                            {
+                                clientName = result4[1].ToString();
+                                clientPhone = result4[2].ToString();
+                                clientAddress = result4[3].ToString();
+                                clientEmail = result4[4].ToString();
+                            }
+                        }
+                    }
+
+                    conn4.Close();
+                    conn4.Dispose();
+
+                    string connStr5 = "server=localhost;user=root;database=repair_bot_db;charset=utf8;";
+                    MySqlConnection conn5 = new MySqlConnection(connStr5);
+
+                    try
+                    {
+                        conn5.Open();
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Error", "Unable to connect to the server");
+                        return;
+                    }
+
+                    MySqlCommand command5 = new MySqlCommand();
+                    command5.Connection = conn5;
+                    command5.CommandText = "SELECT * FROM issues WHERE id = @id";
+                    command5.Parameters.AddWithValue("@id", issueID);
+
+                    using (MySqlDataReader result5 = command5.ExecuteReader())
+                    {
+                        if (result5.HasRows)
+                        {
+                            while (result5.Read())
+                            {
+                                issueDescription = result5[1].ToString();
+                            }
+                        }
+                    }
+
+                    conn5.Close();
+                    conn5.Dispose();
+
+
                     string connStr3 = "server=localhost;user=root;database=repair_bot_db;charset=utf8;";
                     MySqlConnection conn3 = new MySqlConnection(connStr3);
 
@@ -425,15 +494,38 @@ namespace CRMGraduationWork
                     conn3.Close();
                     conn3.Dispose();
 
-                    Console.WriteLine(ID);
-                    Console.WriteLine(name);
-                    Console.WriteLine(email);
-                    Console.WriteLine(phone);
-                    Console.WriteLine(createDate);
-                    Console.WriteLine(acceptDate);
-                    Console.WriteLine(typeOfEquipment);
-                    Console.WriteLine(issue);
-                    Console.WriteLine(masterName);
+                    string connStr6 = "server=localhost;user=root;database=repair_bot_db;charset=utf8;";
+                    MySqlConnection conn6 = new MySqlConnection(connStr6);
+
+                    try
+                    {
+                        conn6.Open();
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Error", "Unable to connect to the server");
+                        return;
+                    }
+
+                    MySqlCommand command6 = new MySqlCommand();
+                    command6.Connection = conn6;
+                    command6.CommandText = "SELECT * FROM techs WHERE id = @id";
+                    command6.Parameters.AddWithValue("@id", techID);
+
+                    using (MySqlDataReader result6 = command6.ExecuteReader())
+                    {
+                        if (result6.HasRows)
+                        {
+                            while (result6.Read())
+                            {
+                                techName = result6[1].ToString();
+                            }
+                        }
+                    }
+
+                    conn6.Close();
+                    conn6.Dispose();
+
 
                     Microsoft.Office.Interop.Word.Application winword = new Microsoft.Office.Interop.Word.Application();
                     winword.ShowAnimation = false;
@@ -444,13 +536,13 @@ namespace CRMGraduationWork
                     document.Content.SetRange(0, 0);
                     document.Content.Text = "Акт о начале работ" + Environment.NewLine +
                                             "Номер заказа: " + ID.ToString() + Environment.NewLine +
-                                            "ФИО: " + name + Environment.NewLine +
-                                            "Email: " + email + Environment.NewLine +
-                                            "Номер тел.: " + phone + Environment.NewLine +
+                                            "ФИО: " + clientName + Environment.NewLine +
+                                            "Email: " + clientEmail + Environment.NewLine +
+                                            "Номер тел.: " + clientPhone + Environment.NewLine +
                                             "Дата создания: " + createDate + Environment.NewLine +
                                             "Дата принятия: " + acceptDate + Environment.NewLine +
-                                            "Тип: " + typeOfEquipment + Environment.NewLine +
-                                            "Проблема: " + issue + Environment.NewLine +
+                                            "Тип: " + techName + Environment.NewLine +
+                                            "Проблема: " + issueDescription + Environment.NewLine +
                                             "ФИО мастера: " + masterName + Environment.NewLine;
 
                     object filename = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Act_o_nachale_rabot_" + ID.ToString() + ".docx";
@@ -463,7 +555,7 @@ namespace CRMGraduationWork
 
                 // click complete
                 case 4:
-                    string completeDate = DateTime.UtcNow.Date.ToString("yyyy-MM-dd HH:mm:ss");
+                    string completeDate = DateTime.UtcNow.AddHours((double)3).ToString("yyyy-MM-dd HH:mm:ss");
                     string connStr2 = "server=localhost;user=root;database=repair_bot_db;charset=utf8;";
                     MySqlConnection conn2 = new MySqlConnection(connStr2);
 
@@ -499,6 +591,7 @@ namespace CRMGraduationWork
             {
                 // click create doc
                 case 4:
+                    /*
                     string name = "";
                     string email = "";
                     string phone = "";
@@ -509,6 +602,25 @@ namespace CRMGraduationWork
                     string price = "";
                     string refinements = "";
                     string issue = "";
+                    int masterID = -1;
+                    string masterName = "";*/
+
+                    ///////////////////
+
+                    int clientID = 0;
+                    string clientName = "";
+                    string clientEmail = "";
+                    string clientPhone = "";
+                    string clientAddress = "";
+                    string createDate = "";
+                    string acceptDate = "";
+                    int techID = 0;
+                    string techName = "";
+                    int issueID = 0;
+                    string issueDescription = "";
+                    string issueRefinements = "";
+                    int issuePrice = 0;
+                    string completeDate = "";
                     int masterID = -1;
                     string masterName = "";
 
@@ -529,6 +641,180 @@ namespace CRMGraduationWork
                     MySqlCommand command = new MySqlCommand();
                     command.Connection = conn;
                     command.CommandText = "SELECT * FROM requests WHERE id = @id";
+                    command.Parameters.AddWithValue("@id", ID);
+
+                    using (MySqlDataReader result = command.ExecuteReader())
+                    {
+                        if (result.HasRows)
+                        {
+                            while (result.Read())
+                            {
+                                createDate = result[1].ToString();
+                                acceptDate = result[2].ToString();
+                                masterID = Convert.ToInt32(result[4]);
+                                techID = Convert.ToInt32(result[6]);
+                                issueID = Convert.ToInt32(result[7]);
+                                clientID = Convert.ToInt32(result[8]);
+                            }
+                        }
+                    }
+
+                    conn.Close();
+                    conn.Dispose();
+
+                    string connStr4 = "server=localhost;user=root;database=repair_bot_db;charset=utf8;";
+                    MySqlConnection conn4 = new MySqlConnection(connStr4);
+
+                    try
+                    {
+                        conn4.Open();
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Error", "Unable to connect to the server");
+                        return;
+                    }
+
+                    MySqlCommand command4 = new MySqlCommand();
+                    command4.Connection = conn4;
+                    command4.CommandText = "SELECT * FROM clients WHERE id = @id";
+                    command4.Parameters.AddWithValue("@id", clientID);
+
+                    using (MySqlDataReader result4 = command4.ExecuteReader())
+                    {
+                        if (result4.HasRows)
+                        {
+                            while (result4.Read())
+                            {
+                                clientName = result4[1].ToString();
+                                clientPhone = result4[2].ToString();
+                                clientAddress = result4[3].ToString();
+                                clientEmail = result4[4].ToString();
+                            }
+                        }
+                    }
+
+                    conn4.Close();
+                    conn4.Dispose();
+
+                    string connStr5 = "server=localhost;user=root;database=repair_bot_db;charset=utf8;";
+                    MySqlConnection conn5 = new MySqlConnection(connStr5);
+
+                    try
+                    {
+                        conn5.Open();
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Error", "Unable to connect to the server");
+                        return;
+                    }
+
+                    MySqlCommand command5 = new MySqlCommand();
+                    command5.Connection = conn5;
+                    command5.CommandText = "SELECT * FROM issues WHERE id = @id";
+                    command5.Parameters.AddWithValue("@id", issueID);
+
+                    using (MySqlDataReader result5 = command5.ExecuteReader())
+                    {
+                        if (result5.HasRows)
+                        {
+                            while (result5.Read())
+                            {
+                                issueDescription = result5[1].ToString();
+                                issuePrice = Convert.ToInt32(result5[2]);
+                                issueRefinements = result5[3].ToString();
+                            }
+                        }
+                    }
+
+                    conn5.Close();
+                    conn5.Dispose();
+
+
+                    string connStr3 = "server=localhost;user=root;database=repair_bot_db;charset=utf8;";
+                    MySqlConnection conn3 = new MySqlConnection(connStr3);
+
+                    try
+                    {
+                        conn3.Open();
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Error", "Unable to connect to the server");
+                        return;
+                    }
+
+                    MySqlCommand command3 = new MySqlCommand();
+                    command3.Connection = conn3;
+                    command3.CommandText = "SELECT * FROM masters WHERE id = @id";
+                    command3.Parameters.AddWithValue("@id", masterID);
+
+                    using (MySqlDataReader result3 = command3.ExecuteReader())
+                    {
+                        if (result3.HasRows)
+                        {
+                            while (result3.Read())
+                            {
+                                masterName = result3[1].ToString();
+                            }
+                        }
+                    }
+
+                    conn3.Close();
+                    conn3.Dispose();
+
+                    string connStr6 = "server=localhost;user=root;database=repair_bot_db;charset=utf8;";
+                    MySqlConnection conn6 = new MySqlConnection(connStr6);
+
+                    try
+                    {
+                        conn6.Open();
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Error", "Unable to connect to the server");
+                        return;
+                    }
+
+                    MySqlCommand command6 = new MySqlCommand();
+                    command6.Connection = conn6;
+                    command6.CommandText = "SELECT * FROM techs WHERE id = @id";
+                    command6.Parameters.AddWithValue("@id", techID);
+
+                    using (MySqlDataReader result6 = command6.ExecuteReader())
+                    {
+                        if (result6.HasRows)
+                        {
+                            while (result6.Read())
+                            {
+                                techName = result6[1].ToString();
+                            }
+                        }
+                    }
+
+                    conn6.Close();
+                    conn6.Dispose();
+
+                    /////////////
+
+                    /*
+                    string connStr = "server=localhost;user=root;database=repair_bot_db;charset=utf8;";
+                    MySqlConnection conn = new MySqlConnection(connStr);
+
+                    try
+                    {
+                        conn.Open();
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Error", "Unable to connect to the server");
+                        return;
+                    }
+
+                    MySqlCommand command = new MySqlCommand();
+                    command.Connection = conn;
+                    command.CommandText = "SELECT * FROM requests WHERE request_id = @id";
                     command.Parameters.AddWithValue("@id", ID);
 
                     using (MySqlDataReader result = command.ExecuteReader())
@@ -585,7 +871,7 @@ namespace CRMGraduationWork
                     }
 
                     conn3.Close();
-                    conn3.Dispose();
+                    conn3.Dispose();*/
 
                     Microsoft.Office.Interop.Word.Application winword = new Microsoft.Office.Interop.Word.Application();
                     winword.ShowAnimation = false;
@@ -596,17 +882,17 @@ namespace CRMGraduationWork
                     document.Content.SetRange(0, 0);
                     document.Content.Text = "Акт о завершении работ" + Environment.NewLine +
                                             "Номер заказа: " + ID.ToString() + Environment.NewLine +
-                                            "ФИО: " + name + Environment.NewLine +
-                                            "Email: " + email + Environment.NewLine +
-                                            "Номер тел.: " + phone + Environment.NewLine +
+                                            "ФИО: " + clientName + Environment.NewLine +
+                                            "Email: " + clientEmail + Environment.NewLine +
+                                            "Номер тел.: " + clientPhone + Environment.NewLine +
                                             "Дата создания: " + createDate + Environment.NewLine +
                                             "Дата принятия: " + acceptDate + Environment.NewLine +
                                             "Дата завершения: " + completeDate + Environment.NewLine +
-                                            "Тип: " + typeOfEquipment + Environment.NewLine +
-                                            "Проблема: " + issue + Environment.NewLine +
+                                            "Тип: " + techName + Environment.NewLine +
+                                            "Проблема: " + issueDescription + Environment.NewLine +
                                             "ФИО мастера: " + masterName + Environment.NewLine +
-                                            "Что сделано: " + refinements + Environment.NewLine +
-                                            "Цена: " + price + Environment.NewLine;
+                                            "Что сделано: " + issueRefinements + Environment.NewLine +
+                                            "Цена: " + issuePrice + Environment.NewLine;
 
                     if (System.IO.File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Act_o_zavershenii_rabot_" + ID.ToString() + ".docx"))
                     {
